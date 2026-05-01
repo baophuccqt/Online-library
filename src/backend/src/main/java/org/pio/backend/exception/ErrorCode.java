@@ -9,14 +9,15 @@ import org.springframework.http.HttpStatusCode;
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized exception", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_ERROR_KEY(1001, "Uncategorized exception", HttpStatus.BAD_REQUEST),
-    USER_EXISTED(1002, "User already exists", HttpStatus.BAD_REQUEST),
+    BOOK_EXISTED(1002, "Book already exists, can not add more", HttpStatus.BAD_REQUEST),
     USERNAME_INVALID(1003, "Username has to be at least 3-character long", HttpStatus.BAD_REQUEST),
     PASSWORD_INVALID(1004, "Password should be at least 8-character long", HttpStatus.BAD_REQUEST),
-    USER_NOT_EXIST(1005, "User not existed", HttpStatus.NOT_FOUND),
+    BOOK_NOT_EXIST(1005, "Book does not exist", HttpStatus.NOT_FOUND),
     UNAUTHENTICATED(1006, "unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission! Fuck off", HttpStatus.FORBIDDEN),
     BAD_TOKEN(1008, "bad token provided",  HttpStatus.BAD_REQUEST),
     BAD_PARSE(1009, "bad parse happened", HttpStatus.BAD_REQUEST),
+    CATEGORY_NOT_EXIST(1010, "this category does not exist", HttpStatus.NOT_FOUND)
     ;
 
     private int code; // by default, 1000 is succesful

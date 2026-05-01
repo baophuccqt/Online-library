@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 // book update request should have the same Id as before
 @Data
@@ -17,12 +18,12 @@ public class BookUpdateRequest {
     String title;
     String author;
     String description;
-    String cover_url;
+    String coverUrl;
     String publisher;
     int publishYear;
     String language;
     int totalCopies;
     int availableCopies;
-    LocalDateTime createAt;
-    LocalDateTime updateAt;
+
+    Set<Long> categoryIds;
 }

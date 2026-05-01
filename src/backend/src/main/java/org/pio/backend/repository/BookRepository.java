@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
-    Optional<Book> findById(long id);
+    boolean existsByIsbn(String isbn);
 }

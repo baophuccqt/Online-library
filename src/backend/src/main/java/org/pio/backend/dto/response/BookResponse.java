@@ -3,11 +3,12 @@ package org.pio.backend.dto.response;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.pio.backend.entity.Category;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
-@Table(name = "Books")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,13 +19,15 @@ public class BookResponse {
     String title;
     String author;
     String description;
-    String cover_url;
+    String coverUrl;
     String publisher;
     int publishYear;
     String language;
-    int totalCopies; // consider to not expose
+    int totalCopies;
     int availableCopies;
-    LocalDateTime createAt; // consider to not expose
-    LocalDateTime updateAt; // consider to not expose
+    LocalDateTime createAt; // consider to not expose later
+    LocalDateTime updateAt; // consider to not expose later
+
+    Set<String> categories;
 }
 
