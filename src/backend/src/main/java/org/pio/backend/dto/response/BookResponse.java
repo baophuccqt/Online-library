@@ -1,9 +1,7 @@
 package org.pio.backend.dto.response;
 
-import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.pio.backend.entity.Category;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -25,8 +23,8 @@ public class BookResponse {
     String language;
     int totalCopies;
     int availableCopies;
-    LocalDateTime createAt; // consider to not expose later
-    LocalDateTime updateAt; // consider to not expose later
+    LocalDateTime createdAt; // consider to not expose later
+    LocalDateTime updatedAt; // consider to not expose later
 
     Set<String> categories;
 }

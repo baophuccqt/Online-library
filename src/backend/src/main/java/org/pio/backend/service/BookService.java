@@ -28,13 +28,11 @@ public class BookService {
     CategoryRepository categoryRepository;
     BookMapper bookMapper;
 
-    @Transactional(readOnly = true)
     public BookResponse getBook(Long id) {
         return bookMapper.toBookResponse(bookRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.BOOK_NOT_EXIST)));
     }
 
-    @Transactional(readOnly = true)
     public List<BookResponse> getAllBooks() {
         return bookRepository.findAll().stream().map(book -> bookMapper.toBookResponse(book)).toList();
     }
@@ -58,7 +56,6 @@ public class BookService {
         return bookMapper.toBookResponse(bookRepository.save(newBook));
     }
 
-    @Transactional
     public BookResponse updateBook(Long id, BookUpdateRequest request) {
         Book currentBook = bookRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.BOOK_NOT_EXIST));
@@ -67,7 +64,6 @@ public class BookService {
         return bookMapper.toBookResponse(bookRepository.save(currentBook));
     }
 
-    @Transactional
     public void deleteBook(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.BOOK_NOT_EXIST)

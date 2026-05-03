@@ -9,6 +9,7 @@ import org.pio.backend.dto.response.ApiResponse;
 import org.pio.backend.dto.response.BookResponse;
 import org.pio.backend.dto.response.CategoryResponse;
 import org.pio.backend.service.CategoryService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class CategoryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<CategoryResponse> addCategory(@RequestBody CategoryAddRequest request) {
         return ApiResponse.<CategoryResponse>builder()
                 .result(categoryService.addCategory(request))
@@ -43,6 +45,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<CategoryResponse> updateCategory(@PathVariable Long id, @RequestBody CategoryUpdateRequest request) {
         return ApiResponse.<CategoryResponse>builder()
                 .result(categoryService.updateCategory(id, request))
@@ -50,6 +53,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ApiResponse.<Void>builder()

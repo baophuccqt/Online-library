@@ -25,6 +25,6 @@ public class BookAddRequest {
     Set<Long> categoryIds;
 
 //    LocalDateTime createAt;
-//    LocalDateTime updateAt;
+//    LocalDateTime updatedAt;
     // user should not be able to manually set these
 }

@@ -16,7 +16,7 @@ import java.util.Set;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @Column(unique = true)
     String isbn; // International standard book number
@@ -32,17 +32,17 @@ public class Book {
     @Column(name = "created_at", updatable = false)
     LocalDateTime createdAt;
     @Column(name = "updated_at")
-    LocalDateTime updateAt;
+    LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        updateAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updateAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @ManyToMany
