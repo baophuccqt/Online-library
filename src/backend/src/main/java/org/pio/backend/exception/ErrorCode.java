@@ -20,7 +20,11 @@ public enum ErrorCode {
     BAD_TOKEN(1008, "bad token provided",  HttpStatus.BAD_REQUEST),
     BAD_PARSE(1009, "bad parse happened", HttpStatus.BAD_REQUEST),
     CATEGORY_NOT_EXIST(1010, "this category does not exist", HttpStatus.NOT_FOUND),
-    USER_NOT_EXIST(1011, "this user does not exist", HttpStatus.NOT_FOUND)
+    USER_NOT_EXIST(1011, "this user does not exist", HttpStatus.NOT_FOUND),
+    BOOK_NOT_AVAILABLE(1012, "this book is not available for now", HttpStatus.BAD_REQUEST),
+    RECORD_NOT_EXIST(1013, "there is no such record", HttpStatus.BAD_REQUEST),
+    BOOK_ALREADY_RETURNED(1014, "this has already been returned", HttpStatus.BAD_REQUEST),
+    ALREADY_BORROWED(1015, "this user has already borrowed this book", HttpStatus.BAD_REQUEST),
     ;
 
     private int code; // by default, 1000 is succesful

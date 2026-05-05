@@ -23,6 +23,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Transactional(readOnly = true)
 public class BookService {
     BookRepository bookRepository;
     CategoryRepository categoryRepository;
@@ -56,6 +57,7 @@ public class BookService {
         return bookMapper.toBookResponse(bookRepository.save(newBook));
     }
 
+    @Transactional
     public BookResponse updateBook(Long id, BookUpdateRequest request) {
         Book currentBook = bookRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.BOOK_NOT_EXIST));
@@ -72,7 +74,7 @@ public class BookService {
     }
 
     // suicide
-    public void deleteAllBooks() {
-        bookRepository.deleteAll();
-    }
+//    public void deleteAllBooks() {
+//        bookRepository.deleteAll();
+//    }
 }

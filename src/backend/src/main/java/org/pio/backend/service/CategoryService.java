@@ -26,6 +26,7 @@ public class CategoryService {
     CategoryMapper categoryMapper;
     private final BookMapper bookMapper;
 
+    @Transactional
     public List<CategoryResponse> getAllCategories() {
         return categoryRepository.findAll().stream().map(category -> categoryMapper.toCategoryResponse(category)).toList();
     }

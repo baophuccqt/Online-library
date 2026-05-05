@@ -11,6 +11,7 @@ import org.pio.backend.exception.AppException;
 import org.pio.backend.exception.ErrorCode;
 import org.pio.backend.mapper.UserMapper;
 import org.pio.backend.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,15 @@ public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
+
+    public UserResponse getMyInfo() {
+        var context = SecurityContextHolder.getContext();
+        Long id = Long.parseLong(context.getAuthentication().getName());
+
+        return userMapper.toUserResponse(userRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXIST)
+        ));
+    }
 
     public UserResponse getUserById(Long id) {
         return userMapper.toUserResponse(userRepository.findById(id).orElseThrow(
