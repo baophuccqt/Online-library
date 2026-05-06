@@ -15,32 +15,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Transactional(readOnly = true)
 public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
 
-    public UserResponse getMyInfo(String userEmail) {
+    public UserResponse getMe(String userEmail) {
         return userMapper.toUserResponse(userRepository.findByEmail(userEmail).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXIST)
+                () -> new AppException(ErrorCode.USER_NOT_FOUND)
         ));
     }
 
     public UserResponse getUserById(Long id) {
         return userMapper.toUserResponse(userRepository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXIST)
-        ));
-    }
-
-    public UserResponse getUserByEmail(String email) {
-        return userMapper.toUserResponse(userRepository.findByEmail(email).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXIST)
+                () -> new AppException(ErrorCode.USER_NOT_FOUND)
         ));
     }
 
@@ -48,10 +42,11 @@ public class UserService {
         return userRepository.findAll(pageable).map(user -> userMapper.toUserResponse(user));
     }
 
+    @Transactional
     public UserResponse createUser(UserAddRequest request) {
         User newUser = userMapper.toUser(request);
         if (userRepository.existsByEmail(newUser.getEmail())) {
-            throw new AppException(ErrorCode.USER_EXISTED);
+            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
         }
 
         // set these values by default like this bc it makes sense
@@ -62,18 +57,31 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(newUser));
     }
 
-    public UserResponse updateUser(Long id, UserUpdateRequest request) {
-        User currentUser = userRepository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXIST)
+    @Transactional
+    public UserResponse updateUser(String userEmail, UserUpdateRequest request) {
+        User currentUser = userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
 
+        if (request.getEmail() != null
+                && !request.getEmail().equals(currentUser.getEmail())
+                && userRepository.existsByEmail(request.getEmail())) {
+            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
+        }
+
         userMapper.updateUser(currentUser, request);
+
+        if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            currentUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
         return userMapper.toUserResponse(userRepository.save(currentUser));
     }
 
+    @Transactional
     public void deleteUser(Long id) {
         User user =  userRepository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXIST)
+                () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
         userRepository.delete(user);
     }

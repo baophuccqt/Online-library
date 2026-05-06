@@ -15,8 +15,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -32,6 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<UserResponse> getUserById(@PathVariable Long id) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getUserById(id))
@@ -46,17 +45,17 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping("/myinfo")
-    public ApiResponse<UserResponse> getMyInfo(@AuthenticationPrincipal Jwt jwt) {
+    @GetMapping("/me")
+    public ApiResponse<UserResponse> getMe(@AuthenticationPrincipal Jwt jwt) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.getMyInfo(jwt.getSubject()))
+                .result(userService.getMe(jwt.getSubject()))
                 .build();
     }
 
-    @PutMapping("/{id}")
-    public ApiResponse<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
+    @PutMapping("/me")
+    public ApiResponse<UserResponse> updateMe(@AuthenticationPrincipal Jwt jwt, @RequestBody @Valid UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.updateUser(id, request))
+                .result(userService.updateUser(jwt.getSubject(), request))
                 .build();
     }
 

@@ -32,7 +32,7 @@ public class BookService {
 
     public BookResponse getBookById(Long id) {
         return bookMapper.toBookResponse(bookRepository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.BOOK_NOT_EXIST)));
+                () -> new AppException(ErrorCode.BOOK_NOT_FOUND)));
     }
 
     public Page<BookResponse> getAllBooks(Pageable pageable) {
@@ -45,7 +45,7 @@ public class BookService {
 
         boolean exists = bookRepository.existsByIsbn(newBook.getIsbn());
         if (exists) {
-            throw new AppException(ErrorCode.BOOK_EXISTED);
+            throw new AppException(ErrorCode.BOOK_ALREADY_EXISTS);
         }
 
         Set<Category> categories = new HashSet<>();
@@ -61,7 +61,7 @@ public class BookService {
     @Transactional
     public BookResponse updateBook(Long id, BookUpdateRequest request) {
         Book currentBook = bookRepository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.BOOK_NOT_EXIST));
+                () -> new AppException(ErrorCode.BOOK_NOT_FOUND));
 
         bookMapper.updateBook(currentBook, request);
         return bookMapper.toBookResponse(bookRepository.save(currentBook));
@@ -69,7 +69,7 @@ public class BookService {
 
     public void deleteBook(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.BOOK_NOT_EXIST)
+                () -> new AppException(ErrorCode.BOOK_NOT_FOUND)
         );
         bookRepository.delete(book);
     }

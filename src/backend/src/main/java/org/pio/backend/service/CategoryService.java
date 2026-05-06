@@ -37,7 +37,7 @@ public class CategoryService {
 
     public Page<BookResponse> getBooksByCategory(Long id, Pageable pageable) {
         Category category = categoryRepository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.CATEGORY_NOT_EXIST)
+                () -> new AppException(ErrorCode.CATEGORY_NOT_FOUND)
         );
 
         return bookRepository.findAllByCategoriesContaining(category, pageable).map(book -> bookMapper.toBookResponse(book));
@@ -53,7 +53,7 @@ public class CategoryService {
     @Transactional
     public CategoryResponse updateCategory(Long id, CategoryUpdateRequest request) {
         Category currentCategory = categoryRepository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.CATEGORY_NOT_EXIST)
+                () -> new AppException(ErrorCode.CATEGORY_NOT_FOUND)
         );
 
         categoryMapper.updateCategory(currentCategory, request);
@@ -63,7 +63,7 @@ public class CategoryService {
     @Transactional
     public void deleteCategory(Long id) {
         if (!categoryRepository.existsById(id)) {
-            throw new AppException(ErrorCode.CATEGORY_NOT_EXIST);
+            throw new AppException(ErrorCode.CATEGORY_NOT_FOUND);
         }
         categoryRepository.deleteById(id);
     }

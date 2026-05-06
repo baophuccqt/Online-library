@@ -32,7 +32,7 @@ public class ReviewService {
 
     public Page<ReviewResponse> getReviewsByBook(Long bookId, Pageable pageable) {
         Book book = bookRepository.findById(bookId).orElseThrow(
-                () -> new AppException(ErrorCode.BOOK_NOT_EXIST)
+                () -> new AppException(ErrorCode.BOOK_NOT_FOUND)
         );
 
         return reviewRepository.findAllByBook(book, pageable).map(review -> reviewMapper.toReviewResponse(review));
@@ -41,15 +41,15 @@ public class ReviewService {
     @Transactional
     public ReviewResponse addReview(ReviewAddRequest request, String userEmail) {
         User user = userRepository.findByEmail(userEmail).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXIST)
+                () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
 
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(
-                () -> new AppException(ErrorCode.BOOK_NOT_EXIST)
+                () -> new AppException(ErrorCode.BOOK_NOT_FOUND)
         );
 
         if (reviewRepository.existsByUserAndBook(user, book)) {
-            throw new AppException(ErrorCode.REVIEW_ALREADY_EXIST);
+            throw new AppException(ErrorCode.REVIEW_ALREADY_EXISTS);
         }
 
         Review review = Review.builder()
@@ -65,7 +65,7 @@ public class ReviewService {
     @Transactional
     public ReviewResponse updateReview(Long reviewId, ReviewUpdateRequest request, String userEmail) {
         Review  review = reviewRepository.findById(reviewId).orElseThrow(
-                () -> new AppException(ErrorCode.REVIEW_NOT_EXIST)
+                () -> new AppException(ErrorCode.REVIEW_NOT_FOUND)
         );
 
         if (!review.getUser().getEmail().equals(userEmail)) {
@@ -79,11 +79,11 @@ public class ReviewService {
     @Transactional
     public void deleteReview(Long reviewId, String userEmail) {
         Review review = reviewRepository.findById(reviewId).orElseThrow(
-                () -> new AppException(ErrorCode.REVIEW_NOT_EXIST)
+                () -> new AppException(ErrorCode.REVIEW_NOT_FOUND)
         );
 
         User user = userRepository.findByEmail(userEmail).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXIST)
+                () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
 
         boolean isAdmin = "ADMIN".equals(user.getRole());

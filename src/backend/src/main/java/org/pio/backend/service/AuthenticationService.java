@@ -39,7 +39,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXIST)
+                () -> new AppException(ErrorCode.UNAUTHENTICATED)
         );
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
@@ -50,26 +50,6 @@ public class AuthenticationService {
                 .token(generateToken(user))
                 .authenticated(true)
                 .build();
-    }
-
-    public JWTClaimsSet verifyToken(String token) {
-        try {
-            SignedJWT signedJWT = SignedJWT.parse(token);
-            if (!signedJWT.verify(new MACVerifier(SIGNER_KEY.getBytes()))) {
-                throw new AppException(ErrorCode.BAD_TOKEN);
-            }
-
-            JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
-            if (claims.getExpirationTime().before(new Date())) {
-                throw new AppException(ErrorCode.BAD_TOKEN);
-            }
-
-            return claims;
-        } catch (ParseException e) {
-            throw new AppException(ErrorCode.BAD_PARSE);
-        } catch (JOSEException e) {
-            throw new AppException(ErrorCode.BAD_TOKEN);
-        }
     }
 
     private String generateToken(User user) {

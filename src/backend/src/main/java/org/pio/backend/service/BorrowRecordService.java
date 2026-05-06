@@ -17,12 +17,10 @@ import org.pio.backend.repository.BorrowRecordRepository;
 import org.pio.backend.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +38,7 @@ public class BorrowRecordService {
 
     public Page<BorrowRecordResponse> getMyBorrowRecords(String userEmail, Pageable pageable) {
         User user = userRepository.findByEmail(userEmail).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXIST)
+                () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
 
         return borrowRecordRepository.findAllByUser(user, pageable).map(borrowRecord -> borrowRecordMapper.toBorrowRecordResponse(borrowRecord));
@@ -48,11 +46,11 @@ public class BorrowRecordService {
 
     public BorrowRecordResponse getBorrowRecordById(Long id, String userEmail) {
         BorrowRecord record = borrowRecordRepository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.RECORD_NOT_EXIST)
+                () -> new AppException(ErrorCode.BORROW_RECORD_NOT_FOUND)
         );
 
         User user = userRepository.findByEmail(userEmail).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXIST)
+                () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
 
         boolean isAdmin = "ADMIN".equals(user.getRole());
@@ -68,11 +66,11 @@ public class BorrowRecordService {
     @Transactional
     public BorrowRecordResponse borrow(BorrowRecordAddRequest request, String userEmail) {
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(
-                () -> new AppException(ErrorCode.BOOK_NOT_EXIST)
+                () -> new AppException(ErrorCode.BOOK_NOT_FOUND)
         );
 
         User user = userRepository.findByEmail(userEmail).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXIST)
+                () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
 
         if (book.getAvailableCopies() <= 0) {
@@ -81,7 +79,7 @@ public class BorrowRecordService {
 
         if (borrowRecordRepository.existsByUserAndBookAndStatus(
                 user, book, BorrowStatus.BORROWED)) {
-            throw new AppException(ErrorCode.ALREADY_BORROWED);
+            throw new AppException(ErrorCode.BOOK_ALREADY_BORROWED);
         }
 
         book.setAvailableCopies(book.getAvailableCopies() - 1);
@@ -101,7 +99,7 @@ public class BorrowRecordService {
     @Transactional
     public BorrowRecordResponse returnBook(Long id) {
         BorrowRecord record = borrowRecordRepository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.RECORD_NOT_EXIST)
+                () -> new AppException(ErrorCode.BORROW_RECORD_NOT_FOUND)
         );
 
         if (record.getStatus() == BorrowStatus.RETURNED) {
