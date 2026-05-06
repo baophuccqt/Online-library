@@ -7,6 +7,10 @@ import org.pio.backend.dto.request.BorrowRecordAddRequest;
 import org.pio.backend.dto.response.ApiResponse;
 import org.pio.backend.dto.response.BorrowRecordResponse;
 import org.pio.backend.service.BorrowRecordService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -23,16 +27,19 @@ public class BorrowRecordController {
 
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<List<BorrowRecordResponse>> getAllBorrowRecords() {
-        return ApiResponse.<List<BorrowRecordResponse>>builder()
-                .result(borrowRecordService.getAllBorrowRecords())
+    public ApiResponse<Page<BorrowRecordResponse>> getAllBorrowRecords(
+            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable
+    ) {
+        return ApiResponse.<Page<BorrowRecordResponse>>builder()
+                .result(borrowRecordService.getAllBorrowRecords(pageable))
                 .build();
     }
 
     @GetMapping("/me")
-    public ApiResponse<List<BorrowRecordResponse>> getMyBorrowRecords(@AuthenticationPrincipal Jwt jwt) {
-        return ApiResponse.<List<BorrowRecordResponse>>builder()
-                .result(borrowRecordService.getMyBorrowRecords(jwt.getSubject()))
+    public ApiResponse<Page<BorrowRecordResponse>> getMyBorrowRecords(@AuthenticationPrincipal Jwt jwt,
+                                                                      @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ApiResponse.<Page<BorrowRecordResponse>>builder()
+                .result(borrowRecordService.getMyBorrowRecords(jwt.getSubject(), pageable))
                 .build();
     }
 

@@ -1,13 +1,15 @@
 package org.pio.backend.controller;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.pio.backend.dto.request.BookAddRequest;
 import org.pio.backend.dto.request.BookUpdateRequest;
 import org.pio.backend.dto.response.ApiResponse;
 import org.pio.backend.dto.response.BookResponse;
 import org.pio.backend.service.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,16 +30,16 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<BookResponse> getBook(@PathVariable Long id) {
+    public ApiResponse<BookResponse> getBookById(@PathVariable Long id) {
         return ApiResponse.<BookResponse>builder()
-                .result(bookService.getBook(id))
+                .result(bookService.getBookById(id))
                 .build();
     }
 
     @GetMapping
-    public ApiResponse<List<BookResponse>> getAllBooks() {
-        return ApiResponse.<List<BookResponse>>builder()
-                .result(bookService.getAllBooks())
+    public ApiResponse<Page<BookResponse>> getAllBooks(@PageableDefault(size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ApiResponse.<Page<BookResponse>>builder()
+                .result(bookService.getAllBooks(pageable))
                 .build();
     }
 
@@ -54,6 +56,8 @@ public class BookController {
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
-        return ApiResponse.<Void>builder().build();
+        return ApiResponse.<Void>builder()
+                .message("Book has been deleted")
+                .build();
     }
 }

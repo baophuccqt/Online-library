@@ -13,11 +13,12 @@ import org.pio.backend.exception.ErrorCode;
 import org.pio.backend.mapper.BookMapper;
 import org.pio.backend.repository.BookRepository;
 import org.pio.backend.repository.CategoryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -29,13 +30,13 @@ public class BookService {
     CategoryRepository categoryRepository;
     BookMapper bookMapper;
 
-    public BookResponse getBook(Long id) {
+    public BookResponse getBookById(Long id) {
         return bookMapper.toBookResponse(bookRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.BOOK_NOT_EXIST)));
     }
 
-    public List<BookResponse> getAllBooks() {
-        return bookRepository.findAll().stream().map(book -> bookMapper.toBookResponse(book)).toList();
+    public Page<BookResponse> getAllBooks(Pageable pageable) {
+        return bookRepository.findAll(pageable).map(book -> bookMapper.toBookResponse(book));
     }
 
     @Transactional

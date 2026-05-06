@@ -15,6 +15,9 @@ import org.pio.backend.mapper.BorrowRecordMapper;
 import org.pio.backend.repository.BookRepository;
 import org.pio.backend.repository.BorrowRecordRepository;
 import org.pio.backend.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,18 +34,16 @@ public class BorrowRecordService {
     UserRepository userRepository;
     BorrowRecordMapper borrowRecordMapper;
 
-    public List<BorrowRecordResponse> getAllBorrowRecords() {
-        return borrowRecordRepository.findAll().stream().map(
-                borrowRecord -> borrowRecordMapper.toBorrowRecordResponse(borrowRecord)).toList();
+    public Page<BorrowRecordResponse> getAllBorrowRecords(Pageable pageable) {
+        return borrowRecordRepository.findAll(pageable).map(borrowRecord -> borrowRecordMapper.toBorrowRecordResponse(borrowRecord));
     }
 
-    public List<BorrowRecordResponse> getMyBorrowRecords(String userEmail) {
+    public Page<BorrowRecordResponse> getMyBorrowRecords(String userEmail, Pageable pageable) {
         User user = userRepository.findByEmail(userEmail).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXIST)
         );
 
-        return borrowRecordRepository.findAllByUser(user).stream().map(
-                borrowRecord -> borrowRecordMapper.toBorrowRecordResponse(borrowRecord)).toList();
+        return borrowRecordRepository.findAllByUser(user, pageable).map(borrowRecord -> borrowRecordMapper.toBorrowRecordResponse(borrowRecord));
     }
 
     public BorrowRecordResponse getBorrowRecordById(Long id, String userEmail) {

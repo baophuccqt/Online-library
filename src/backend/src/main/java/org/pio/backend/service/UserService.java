@@ -11,7 +11,8 @@ import org.pio.backend.exception.AppException;
 import org.pio.backend.exception.ErrorCode;
 import org.pio.backend.mapper.UserMapper;
 import org.pio.backend.repository.UserRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +26,8 @@ public class UserService {
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
 
-    public UserResponse getMyInfo() {
-        var context = SecurityContextHolder.getContext();
-        Long id = Long.parseLong(context.getAuthentication().getName());
-
-        return userMapper.toUserResponse(userRepository.findById(id).orElseThrow(
+    public UserResponse getMyInfo(String userEmail) {
+        return userMapper.toUserResponse(userRepository.findByEmail(userEmail).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXIST)
         ));
     }
@@ -46,8 +44,8 @@ public class UserService {
         ));
     }
 
-    public List<UserResponse> getAllUsers() {
-        return userRepository.findAll().stream().map(user -> userMapper.toUserResponse(user)).toList();
+    public Page<UserResponse> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(user -> userMapper.toUserResponse(user));
     }
 
     public UserResponse createUser(UserAddRequest request) {

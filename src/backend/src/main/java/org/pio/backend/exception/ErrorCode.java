@@ -25,6 +25,8 @@ public enum ErrorCode {
     RECORD_NOT_EXIST(1013, "there is no such record", HttpStatus.BAD_REQUEST),
     BOOK_ALREADY_RETURNED(1014, "this has already been returned", HttpStatus.BAD_REQUEST),
     ALREADY_BORROWED(1015, "this user has already borrowed this book", HttpStatus.BAD_REQUEST),
+    REVIEW_NOT_EXIST(1016, "this review does not exist", HttpStatus.NOT_FOUND),
+    REVIEW_ALREADY_EXIST(1017, "this review already exists", HttpStatus.BAD_REQUEST),
     ;
 
     private int code; // by default, 1000 is succesful

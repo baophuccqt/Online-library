@@ -33,7 +33,7 @@ public class Review {
     @JoinColumn(name = "book_id", nullable = false)
     Book book;
 
-    int rating;
+    Integer rating;
 
     @Column(columnDefinition = "TEXT")
     String comment;
@@ -41,8 +41,16 @@ public class Review {
     @Column(name = "created_at", updatable = false, nullable = false)
     LocalDateTime createdAt;
 
+    @Column(name = "updated_at")
+    LocalDateTime updatedAt;
+
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 }

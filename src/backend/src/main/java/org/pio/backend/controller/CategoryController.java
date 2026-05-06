@@ -9,6 +9,10 @@ import org.pio.backend.dto.response.ApiResponse;
 import org.pio.backend.dto.response.BookResponse;
 import org.pio.backend.dto.response.CategoryResponse;
 import org.pio.backend.service.CategoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,16 +27,17 @@ public class CategoryController {
 
 
     @GetMapping
-    public ApiResponse<List<CategoryResponse>> getAllCategories() {
-        return ApiResponse.<List<CategoryResponse>>builder()
-                .result(categoryService.getAllCategories())
+    public ApiResponse<Page<CategoryResponse>> getAllCategories(@PageableDefault(size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ApiResponse.<Page<CategoryResponse>>builder()
+                .result(categoryService.getAllCategories(pageable))
                 .build();
     }
 
     @GetMapping("/{id}/books")
-    public ApiResponse<List<BookResponse>> getAllBooksByCategory(@PathVariable Long id) {
-        return ApiResponse.<List<BookResponse>>builder()
-                .result(categoryService.getBooksByCategory(id))
+    public ApiResponse<Page<BookResponse>> getAllBooksByCategory(@PathVariable Long id,
+                                                                 @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ApiResponse.<Page<BookResponse>>builder()
+                .result(categoryService.getBooksByCategory(id, pageable))
                 .build();
     }
 
@@ -57,6 +62,7 @@ public class CategoryController {
     public ApiResponse<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ApiResponse.<Void>builder()
+                .message("Category has been deleted")
                 .build();
     }
 }
