@@ -1,33 +1,49 @@
-HELP.md
+# ====== Java / Maven / Spring Boot ======
+
+# Maven build output
 target/
-.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Maven wrapper (giữ mvnw, mvnw.cmd, .mvn/wrapper/maven-wrapper.properties)
+.mvn/wrapper/maven-wrapper.jar
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+# Compiled class files
+*.class
 
-### NetBeans ###
+# Package files
+*.jar
+*.war
+*.ear
+*.nar
+!.mvn/wrapper/maven-wrapper.jar
+
+# Spring Boot
+HELP.md
+spring-boot-*.log
+application-*-local.yml
+application-*-local.properties
+
+# JVM crash logs
+hs_err_pid*
+replay_pid*
+
+# Gradle (phòng trường hợp chuyển sang Gradle)
+.gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
-.vscode/
+# Database files (H2/SQLite local nếu có)
+*.db
+*.sqlite
+*.sqlite3
+*.mv.db
+*.trace.db
