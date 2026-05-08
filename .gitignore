@@ -1,0 +1,55 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+.fuse_hidden*
+.Trash-*
+
+# IDE - VS Code
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json.example
+
+# IDE - IntelliJ / JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# IDE - Eclipse / STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+# Editor swap/temp files
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+*~
+
+# Environment / Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs
+*.log
+logs/
+
+# Claude / AI tools
+.claude/
