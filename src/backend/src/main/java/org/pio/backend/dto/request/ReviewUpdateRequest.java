@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReviewUpdateRequest {
+    @NotNull
     @Min(value = 0, message = "rating must be at least 0")
     @Max(value = 5, message = "rating must be at most 5")
     Integer rating;

@@ -24,9 +24,4 @@ public class UserAddRequest {
     @NotBlank(message = "email can not be empty")
     @Email(message = "from user add request: invalid email")
     String email;
-//    String role;
-//    boolean isActive;
-
-    // these 2 field should not be decided by user's request
-    // we should give isActive true value by default, give role USER value by default
 }

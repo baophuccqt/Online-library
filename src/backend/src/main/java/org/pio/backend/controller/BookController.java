@@ -1,5 +1,6 @@
 package org.pio.backend.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.pio.backend.dto.request.BookAddRequest;
 import org.pio.backend.dto.request.BookUpdateRequest;
@@ -23,7 +24,7 @@ public class BookController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<BookResponse> addBook(@RequestBody BookAddRequest request) {
+    public ApiResponse<BookResponse> addBook(@RequestBody @Valid BookAddRequest request) {
         return ApiResponse.<BookResponse>builder()
                 .result(bookService.addBook(request))
                 .build();
@@ -46,7 +47,7 @@ public class BookController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<BookResponse> updateBook(@PathVariable Long id, @RequestBody BookUpdateRequest request) {
+    public ApiResponse<BookResponse> updateBook(@PathVariable Long id, @RequestBody @Valid BookUpdateRequest request) {
         return ApiResponse.<BookResponse>builder()
                 .result(bookService.updateBook(id, request))
                 .build();

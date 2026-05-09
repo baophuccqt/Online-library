@@ -1,5 +1,6 @@
 package org.pio.backend.controller;
 
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -43,7 +44,7 @@ public class CategoryController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<CategoryResponse> addCategory(@RequestBody CategoryAddRequest request) {
+    public ApiResponse<CategoryResponse> addCategory(@RequestBody @Valid CategoryAddRequest request) {
         return ApiResponse.<CategoryResponse>builder()
                 .result(categoryService.addCategory(request))
                 .build();
@@ -51,7 +52,7 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<CategoryResponse> updateCategory(@PathVariable Long id, @RequestBody CategoryUpdateRequest request) {
+    public ApiResponse<CategoryResponse> updateCategory(@PathVariable Long id, @RequestBody @Valid CategoryUpdateRequest request) {
         return ApiResponse.<CategoryResponse>builder()
                 .result(categoryService.updateCategory(id, request))
                 .build();

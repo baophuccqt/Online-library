@@ -1,5 +1,7 @@
 package org.pio.backend.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -51,7 +53,7 @@ public class BorrowRecordController {
     }
 
     @PostMapping
-    public ApiResponse<BorrowRecordResponse> borrow(@RequestBody BorrowRecordAddRequest request, @AuthenticationPrincipal Jwt jwt) {
+    public ApiResponse<BorrowRecordResponse> borrow(@RequestBody @Valid BorrowRecordAddRequest request, @AuthenticationPrincipal Jwt jwt) {
         return ApiResponse.<BorrowRecordResponse>builder()
                 .result(borrowRecordService.borrow(request, jwt.getSubject()))
                 .build();
@@ -59,7 +61,7 @@ public class BorrowRecordController {
 
     @PostMapping("/{id}/return")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<BorrowRecordResponse> returnBook(@PathVariable Long id) {
+    public ApiResponse<BorrowRecordResponse> returnBook(@PathVariable @NotNull(message = "Invalid bookId") Long id) {
         return ApiResponse.<BorrowRecordResponse>builder()
                 .result(borrowRecordService.returnBook(id))
                 .build();

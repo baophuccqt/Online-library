@@ -22,4 +22,7 @@ public class BorrowRecordResponse {
     LocalDateTime returnDate;
 
     BorrowStatus status;
+
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }
