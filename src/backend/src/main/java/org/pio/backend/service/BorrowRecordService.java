@@ -65,7 +65,7 @@ public class BorrowRecordService {
 
     @Transactional
     public BorrowRecordResponse borrow(BorrowRecordAddRequest request, String userEmail) {
-        Book book = bookRepository.findById(request.getBookId()).orElseThrow(
+        Book book = bookRepository.findByIdForUpdate(request.getBookId()).orElseThrow(
                 () -> new AppException(ErrorCode.BOOK_NOT_FOUND)
         );
 
@@ -106,9 +106,13 @@ public class BorrowRecordService {
             throw new AppException(ErrorCode.BOOK_ALREADY_RETURNED);
         }
 
+        Book book = bookRepository.findByIdForUpdate(record.getBook().getId()).orElseThrow(
+                () -> new AppException(ErrorCode.BOOK_NOT_FOUND)
+        );
+
         record.setReturnDate(LocalDateTime.now());
         record.setStatus(BorrowStatus.RETURNED);
-        record.getBook().setAvailableCopies(record.getBook().getAvailableCopies() + 1);
+        book.setAvailableCopies(record.getBook().getAvailableCopies() + 1);
 
         return borrowRecordMapper.toBorrowRecordResponse(borrowRecordRepository.save(record));
     }

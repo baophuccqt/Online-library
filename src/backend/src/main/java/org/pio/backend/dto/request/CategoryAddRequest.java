@@ -2,6 +2,7 @@ package org.pio.backend.dto.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,6 +16,6 @@ public class CategoryAddRequest {
     String name;
 
     @NotBlank(message = "Category's description should not be blank")
-    @Min(value = 10, message = "Please give some more description")
+    @Size(min = 10, message = "Please give some more description")
     String description;
 }

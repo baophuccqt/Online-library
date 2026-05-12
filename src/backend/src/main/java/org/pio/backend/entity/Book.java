@@ -3,6 +3,8 @@ package org.pio.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.BatchSize;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -46,6 +48,7 @@ public class Book {
     }
 
     @ManyToMany
+    @BatchSize(size = 50)
     @JoinTable(
             name = "book_categories",
             joinColumns = @JoinColumn(name = "book_id"),

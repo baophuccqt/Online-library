@@ -21,7 +21,7 @@ public class BookAddRequest {
     @NotBlank(message = "Title should not be blank")
     String title;
 
-    @NotBlank(message = "Title should not be blank")
+    @NotBlank(message = "Author should not be blank")
     String author;
 
     @Size(max = 500, message = "Description should be 500-character max")
